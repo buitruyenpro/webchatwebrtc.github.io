@@ -1,4 +1,17 @@
-const socket = io("https://stream3005.herokuapp.com/");
+const socket = io("http://localhost:3000/");
+
+socket.on("DANH_SACH_ONLINE", (arrUserInfo) => {
+  arrUserInfo.forEach((user) => {
+    const { ten, peerId } = user;
+    $("#ulUser").append(`<li id="${peerId}">${ten}</li>`);
+  });
+});
+
+socket.on("CO_NGUOI_DUNG_MOI", (user) => {
+  const { ten, peerId } = user;
+  $("#ulUser").append(`<li id="${peerId}">${ten}</li>`);
+});
+
 function openStream() {
   const config = { audio: true, video: true };
   return navigator.mediaDevices.getUserMedia(config);
@@ -12,6 +25,10 @@ function playStream(idVideoTag, stream) {
 const peer = new Peer({ key: "peerjs" });
 peer.on("open", (id) => {
   $("#my-peer").append(id);
+  $("#btnSignUp").click(() => {
+    const username = $("#txtUsername").val();
+    socket.emit("NGUOI_DUNG_DANG_KY", { ten: username, peerId: id });
+  });
 });
 
 //Caller
@@ -35,4 +52,9 @@ peer.on("call", (call) => {
       playStream("remoteStream", remoteStream)
     );
   });
+});
+
+$("#btnSignUp").click(() => {
+  const username = $("#txtUsername").val();
+  socket.emit("NGUOI_DUNG_DANG_KY", { ten: username });
 });
