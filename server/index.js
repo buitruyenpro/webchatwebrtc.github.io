@@ -9,6 +9,7 @@ io.on("connection", (socket) => {
     if (isExist) return socket.emit("DANG_KY_THAT_BAT");
     arrUserInfo.push(user);
     socket.emit("DANH_SACH_ONLINE", arrUserInfo);
+    // Thông báo cho tất cả mọi người trừ cái người dùng đăng ký mới
     socket.broadcast.emit("CO_NGUOI_DUNG_MOI", user);
   });
 

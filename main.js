@@ -12,6 +12,10 @@ socket.on("DANH_SACH_ONLINE", (arrUserInfo) => {
     const { ten, peerId } = user;
     $("#ulUser").append(`<li id="${peerId}">${ten}</li>`);
   });
+
+  socket.on("AI_DO_NGAT_KET_NOI", (peerId) => {
+    $(`#${peerId}`).remove();
+  });
 });
 
 socket.on("DANG_KY_THAT_BAT", () => alert("Vui long chon username khac!"));
@@ -22,6 +26,7 @@ function openStream() {
 }
 
 function playStream(idVideoTag, stream) {
+  console.log("stream cua ban", stream);
   const video = document.getElementById(idVideoTag);
   video.srcObject = stream;
   video.play();
@@ -37,10 +42,13 @@ peer.on("open", (id) => {
 
 //Caller
 $("#btnCall").click(() => {
+  // Trên textbox lấy giá trị ID của thẳng khác
   const id = $("#remoteId").val();
   openStream().then((stream) => {
     playStream("localStream", stream);
+    // Mình gửi stream đến thẳng khác nhận
     const call = peer.call(id, stream);
+    // Sau đó mình phát stream của thằng khác
     call.on("stream", (remoteStream) =>
       playStream("remoteStream", remoteStream)
     );
