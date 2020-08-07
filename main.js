@@ -1,3 +1,4 @@
+const socket = io("https://stream3005.herokuapp.com/");
 function openStream() {
   const config = { audio: true, video: true };
   return navigator.mediaDevices.getUserMedia(config);
